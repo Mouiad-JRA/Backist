@@ -5,7 +5,7 @@
 const account1 = {
   owner: "Mouiad Gyahd Ali",
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
-  interestRate: 1.2, // %
+  interestRate: 1.2, //
   pin: 1111,
 };
 
@@ -73,7 +73,7 @@ const displayMovement = function (movement) {
     containerMovements.insertAdjacentHTML("afterbegin", html);
   });
 };
-displayMovement(account1.movements);
+
 
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
@@ -92,24 +92,44 @@ const calcDisplayBalance = function (movements) {
     0
   )} € `;
 };
-calcDisplayBalance(account1.movements);
 
-const calcDisplaySummary = function (movements) {
-  const incomes = movements
+
+const calcDisplaySummary = function (account) {
+  const incomes = account.movements
     .filter((mov) => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
   labelSumIn.textContent = `${incomes} €  `;
-  const out = movements
+  const out =  account.movements
     .filter((mov) => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
   labelSumOut.textContent = `${Math.abs(out)} € `;
-  labelSumInterest.textContent = `${movements
+  labelSumInterest.textContent = `${account.movements
     .filter((mov) => mov > 0)
-    .map((deposit) => (deposit * 1.2) / 100)
+    .map((deposit) => (deposit * account.interestRate) / 100)
     .filter((int) => int >= 1)
     .reduce((acc, int) => acc + int, 0)}  €  `;
 };
-calcDisplaySummary(account1.movements);
+
+
+// Event handler
+let currentAccount;
+btnLogin.addEventListener('click',(event)=>{
+  event.preventDefault();
+ currentAccount=
+    accounts.find(acc=>acc.username === inputLoginUsername.value)
+if (currentAccount?.pin === Number(inputLoginPin.value))
+{
+  labelWelcome.textContent =
+      `Welcome Back ${currentAccount.owner.split(' ') [0]}`
+      containerApp.style.opacity = 1;
+  displayMovement(currentAccount.movements);
+  calcDisplayBalance(currentAccount.movements);
+  calcDisplaySummary(currentAccount);
+  inputLoginUsername.value =  inputLoginPin.value = '';
+}
+
+})
+
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -156,3 +176,8 @@ const totalDepositsUsd = movements
   .reduce((acc, mov) => acc + mov, 0);
 
 // console.log(totalDepositsUsd);
+ const firstWithdrawal = movements.find(mov => mov<0);
+ // console.log(firstWithdrawal);
+
+ const account = accounts.find(acc=>acc.owner==="Mouiad Gyahd Ali")
+// console.log(account)
