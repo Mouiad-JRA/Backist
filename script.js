@@ -86,11 +86,12 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 
-const calcDisplayBalance = function (movements) {
-  labelBalance.textContent = `${movements.reduce(
+const calcDisplayBalance = function (account) {
+  account.balance = account.movements.reduce(
     (acc, mov) => acc + mov,
     0
-  )} € `;
+  );
+  labelBalance.textContent =`${balance} € `
 };
 
 
@@ -110,7 +111,11 @@ const calcDisplaySummary = function (account) {
     .reduce((acc, int) => acc + int, 0)}  €  `;
 };
 
-
+const updateUI = function (acc){
+  displayMovement(acc.movements);
+  calcDisplayBalance(acc);
+  calcDisplaySummary(acc);
+}
 // Event handler
 let currentAccount;
 btnLogin.addEventListener('click',(event)=>{
@@ -122,15 +127,46 @@ if (currentAccount?.pin === Number(inputLoginPin.value))
   labelWelcome.textContent =
       `Welcome Back ${currentAccount.owner.split(' ') [0]}`
       containerApp.style.opacity = 1;
-  displayMovement(currentAccount.movements);
-  calcDisplayBalance(currentAccount.movements);
-  calcDisplaySummary(currentAccount);
+
   inputLoginUsername.value =  inputLoginPin.value = '';
-}
+  inputLoginPin.blur();
+  updateUI(currentAccount);
+}});
 
+btnTransfer.addEventListener('click', function (event){
+  event.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+
+  const receiverAccount = accounts.find(acc=>acc.username ===inputTransferTo.value);
+  inputTransferAmount.value = inputTransferTo.value = '';
+  if( amount > 0 &&
+      currentAccount.balance >= amount && receiverAccount &&
+      receiverAccount?.username !== currentAccount.username ){
+    // Transfer the Money
+      currentAccount.movements.push(-amount);
+      receiverAccount.movements.push(amount);
+      // update Ui
+      updateUI(currentAccount)
+
+  }
+});
+
+// close account
+
+btnClose.addEventListener('click', function (event){
+  event.preventDefault();
+  if (currentAccount.username === inputCloseUsername.value
+      && currentAccount.pin ===Number(inputClosePin.value))
+  {const index =  accounts.findIndex(acc => acc.username===currentAccount.username);
+    // delete the account
+    accounts.splice(index,1);}
+
+  // Hide UI
+  labelWelcome.textContent =
+      `You are Logout from our bank, login again with other account`
+  containerApp.style.opacity = 0;
+  inputCloseUsername.value = inputClosePin.value = '';
 })
-
-
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
