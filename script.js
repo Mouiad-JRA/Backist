@@ -91,7 +91,7 @@ const calcDisplayBalance = function (account) {
     (acc, mov) => acc + mov,
     0
   );
-  labelBalance.textContent =`${balance} € `
+  labelBalance.textContent =`${account.balance} € `
 };
 
 
@@ -151,8 +151,21 @@ btnTransfer.addEventListener('click', function (event){
   }
 });
 
-// close account
+// request loan
+btnLoan.addEventListener('click', function (event){
+  event.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  inputLoanAmount.value = '';
+  if (amount > 0 && currentAccount.movements.some(mov=>mov >= amount * 0.1)) {
+    // add movement
+    // TODO : fix the loan logic , when you request n,
+    //  and have it you can request more and more, fix that
+    currentAccount.movements.push(amount);
+    updateUI(currentAccount);
+  }
+});
 
+// close account
 btnClose.addEventListener('click', function (event){
   event.preventDefault();
   if (currentAccount.username === inputCloseUsername.value
@@ -217,3 +230,9 @@ const totalDepositsUsd = movements
 
  const account = accounts.find(acc=>acc.owner==="Mouiad Gyahd Ali")
 // console.log(account)
+
+// some condition
+const anyDeposits = movements.some(mov=>mov>0)
+// console.log(anyDeposits)
+const nigDeposits = movements.includes(-1)
+
