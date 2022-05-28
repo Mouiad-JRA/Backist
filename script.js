@@ -58,9 +58,10 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-const displayMovement = function (movement) {
+const displayMovement = function (movement, sort=false) {
   containerMovements.innerHTML = "";
-  movement.forEach(function (mov, i) {
+  const movs = sort ? movement.slice().sort((a,b)=>a-b) : movement;
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? "deposit" : "withdrawal";
     const html = `
             <div class="movements__row">
@@ -180,6 +181,12 @@ btnClose.addEventListener('click', function (event){
   containerApp.style.opacity = 0;
   inputCloseUsername.value = inputClosePin.value = '';
 })
+let sorted = false;
+btnSort.addEventListener('click', function (event){
+  event.preventDefault();
+  displayMovement(currentAccount.movements, !sorted)
+  sorted = !sorted;
+})
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -236,3 +243,5 @@ const anyDeposits = movements.some(mov=>mov>0)
 // console.log(anyDeposits)
 const nigDeposits = movements.includes(-1)
 
+const allMovements = accounts.map(acc=>acc.movements).flat();
+console.log(allMovements)
