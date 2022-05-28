@@ -112,13 +112,72 @@
           <label class="form__label">Confirm PIN</label>
         </form>
       </div>
+      <div class="welcome-modal hidden">
+        <button class="close-modal">&times;</button>
+        <h1>Welcome to our site</h1>
+        <h4>
+          Here you can check your balance, bank account , transfer money and
+          many other cool stuff
+        </h4>
+      </div>
 
+      <div class="transfer-modal hidden">
+        <button class="transfer-close-modal">&times;</button>
+        <h1>You have entered empty values</h1>
+        <h2>
+          You need to enter the account username that you want to transfer money
+          to, and a positive number in order to transfer the money
+        </h2>
+      </div>
+
+      <div class="transfer-modal-wrong hidden">
+        <button class="transfer-wrong-close-modal">&times;</button>
+        <h1>You can't give your self money</h1>
+        <h2>
+          You need to enter the account username that differ from your account
+        </h2>
+      </div>
+
+      <div class="transfer-modal-not-exit hidden">
+        <button class="transfer-exit-close-modal">&times;</button>
+        <h1>
+          The user you're trying to send the money to user which is not exits
+        </h1>
+        <h2>You need to enter a username account that already exits</h2>
+      </div>
+
+      <div class="request-loan-modal hidden">
+        <button class="request-loan-close-modal">&times;</button>
+        <h1>You have entered empty value</h1>
+        <h2>You need to enter a positive value</h2>
+      </div>
+
+      <div class="request-loan-negative-modal hidden">
+        <button class="request-loan-negative-close-modal">&times;</button>
+        <h1>You have entered negative value</h1>
+        <h2>You need to enter a positive one</h2>
+      </div>
+      <div class="close-account-modal hidden">
+        <button class="close-account-close-modal">&times;</button>
+        <h1>You have entered empty values</h1>
+        <h2>You need to enter your username and your pin</h2>
+      </div>
+      <div class="close-account-not-exit-modal hidden">
+        <button class="close-account-not-exit-close-modal">&times;</button>
+        <h1>You have entered wrong user name</h1>
+        <h2>You need to enter your username account</h2>
+      </div>
+      <div class="close-account-wrong-pin-modal hidden">
+        <button class="close-account-wrong-pin-close-modal">&times;</button>
+        <h1>You have entered negative value</h1>
+        <h2>You need to enter a positive one</h2>
+      </div>
       <!-- LOGOUT TIMER -->
       <p class="logout-timer">
         You will be logged out in <span class="timer">05:00</span>
       </p>
     </main>
-
+    <!--    <div class="overlay hidden"></div>-->
     <script src="script.js"></script>
   </body>
 </html>

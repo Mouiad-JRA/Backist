@@ -155,11 +155,11 @@ nav {
 }
 
 .movements__type--deposit {
-  background-image: linear-gradient(to top left, #39b385, #9be15d);
+  background-image: linear-gradient(to top left, #2a3ae5, #081d79);
 }
 
 .movements__type--withdrawal {
-  background-image: linear-gradient(to top left, #e52a5a, #ff585f);
+  background-image: linear-gradient(to top left, #e52a2a, #700005);
 }
 
 .movements__value {
@@ -190,11 +190,11 @@ nav {
 
 .summary__value--in,
 .summary__value--interest {
-  color: #66c873;
+  color: #177a00;
 }
 
 .summary__value--out {
-  color: #f5465d;
+  color: #ff0000;
 }
 
 .btn--sort {
@@ -214,15 +214,15 @@ nav {
 }
 
 .operation--transfer {
-  background-image: linear-gradient(to top left, #ffb003, #ffcb03);
+  background-image: linear-gradient(to top left, #dd03ff, #ab03ff);
 }
 
 .operation--loan {
-  background-image: linear-gradient(to top left, #39b385, #9be15d);
+  background-image: linear-gradient(to top left, #00e58d, #9be15d);
 }
 
 .operation--close {
-  background-image: linear-gradient(to top left, #e52a5a, #ff585f);
+  background-image: linear-gradient(to top left, #e52a2a, #fffc58);
 }
 
 h2 {
@@ -294,4 +294,72 @@ h2 {
 
 .timer {
   font-weight: 600;
+}
+
+.hidden {
+  display: none;
+}
+
+.welcome-modal,
+.transfer-modal,
+.transfer-modal-wrong,
+.transfer-modal-not-exit,
+.request-loan-modal,
+.request-loan-negative-modal,
+.close-account-modal,
+.close-account-not-exit-modal,
+.close-account-wrong-pin-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+
+  background-color: white;
+  padding: 6rem;
+  border-radius: 15px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 5;
+}
+
+.show-modal {
+  font-size: 2rem;
+  font-weight: 600;
+  padding: 1.75rem 3.5rem;
+  margin: 5rem 2rem;
+  border: none;
+  background-color: #fff;
+  color: #444;
+  border-radius: 10rem;
+  cursor: pointer;
+}
+
+.close-modal,
+.transfer-close-modal,
+.transfer-wrong-close-modal,
+.transfer-exit-close-modal,
+.request-loan-close-modal,
+.request-loan-negative-close-modal,
+.close-account-close-modal,
+.close-account-not-exit-close-modal,
+.close-account-wrong-pin-close-modal {
+  position: absolute;
+  top: 1.2rem;
+  right: 2rem;
+  font-size: 5rem;
+  color: #333;
+  cursor: pointer;
+  border: none;
+  background: none;
 }
