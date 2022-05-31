@@ -166,6 +166,7 @@ const openModel = function (modal) {
 };
 const closeModal = function (modal) {
   modal.classList.add("hidden");
+  overlay.classList.add("hidden");
 };
 const now = new Date();
 labelDate.textContent = `${now.getDate()}`.padStart(2,0) +`/` + `${now.getMonth()+1}`.padStart(2,0)+`/
@@ -204,7 +205,7 @@ btnCloseWrongPinAccountModal.addEventListener(
   "click",
   closeModal.bind(null, accountCloseWrongPinModal)
 );
-const formatMovementDate = function (date){
+const formatMovementDate = function (date, local){
   const calcDaysPassed = (date1, date2) =>
     Math.round(Math.abs(date2-date1)/(1000*60*60*24));
   const daysPassed = calcDaysPassed(new Date(), date)
@@ -212,8 +213,19 @@ const formatMovementDate = function (date){
   if (daysPassed === 1) return 'Yesterday';
   if (daysPassed <= 10) return `${daysPassed} days ago`;
 
-  return `${date.getDate()}`.padStart(2,0) +`/` + `${date.getMonth()+1}`.padStart(2,0)+`/
- ${date.getFullYear()}`
+ //  return `${date.getDate()}`.padStart(2,0) +`/` + `${date.getMonth()+1}`.padStart(2,0)+`/
+ // ${date.getFullYear()}`
+
+  return new Intl.DateTimeFormat(local).format(date);
+}
+
+const formattadCur = function (value, local, currency){
+  return new Intl.NumberFormat(local,
+      {
+        style : 'currency',
+        currency :currency
+      }
+  ).format(value);
 }
 const displayMovement = function (acc, sort = false) {
   containerMovements.innerHTML = "";
@@ -222,14 +234,15 @@ const displayMovement = function (acc, sort = false) {
     const type = mov > 0 ? "deposit" : "withdrawal";
 
     const date = new Date(acc.movementsDates[i])
-    const displayDate = formatMovementDate(date);
+    const displayDate = formatMovementDate(date, currentAccount.locale);
     const html = `
             <div class="movements__row">
             <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
             <div class="movements__date">${displayDate}</div>
-            <div class="movements__value">${mov.toFixed(2)} €</div>
+            <div class="movements__value">${formattadCur(mov, acc.locale
+    , acc.currency)}</div>
         </div>`;
     containerMovements.insertAdjacentHTML("afterbegin", html);
   });
@@ -247,25 +260,27 @@ const createUsernames = function (accs) {
 createUsernames(accounts);
 
 const calcDisplayBalance = function (account) {
-  account.balance = account.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${account.balance.toFixed(2)} € `;
+  account.balance = account.movements.
+  reduce((acc, mov) => acc + mov, 0);
+
+  labelBalance.textContent = `${formattadCur(account.balance,account.locale ,account.currency)} `;
 };
 
 const calcDisplaySummary = function (account) {
   const incomes = account.movements
     .filter((mov) => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes.toFixed(2)} €  `;
+  labelSumIn.textContent = `${formattadCur(incomes,account.locale ,account.currency)} `;
   const out = account.movements
     .filter((mov) => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)} € `;
+  labelSumOut.textContent = `${formattadCur(Math.abs(out),account.locale ,account.currency)}`;
   const interest = account.movements
       .filter((mov) => mov > 0)
       .map((deposit) => (deposit * account.interestRate) / 100)
       .filter((int) => int >= 1)
       .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest.toFixed(2)}  €  `;
+  labelSumInterest.textContent = `${formattadCur(interest,account.locale ,account.currency)}`;
 };
 
 const updateUI = function (acc) {
@@ -274,11 +289,38 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 // Event handler
-let currentAccount;
+
+const startLogoutTimer = function ()  {
+  const tick = function ()
+  {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+    labelTimer.textContent = `${min}:${sec}`;
+
+
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = `Login in now`;
+      inputLoginUsername.value = inputLoginPin.value = "";
+      inputTransferAmount.value = inputTransferTo.value = "";
+      inputLoanAmount.value = "";
+      containerApp.style.opacity = 0;
+    }
+    time--;
+  }
+  let time = 6;
+  tick()
+  const timer = setInterval(tick, 1000);
+  return timer;
+}
+
+
+
+let currentAccount, timer;
 
 btnLogin.addEventListener("click", (event) => {
   event.preventDefault();
-  openModelWithOutOverlay(welcomeModal);
+  openModel(welcomeModal);
 
   currentAccount = accounts.find(
     (acc) => acc.username === inputLoginUsername.value
@@ -288,9 +330,22 @@ btnLogin.addEventListener("click", (event) => {
       currentAccount.owner.split(" ")[0]
     }`;
     containerApp.style.opacity = 1;
-
+    const now = new Date();
+    const options = {
+      hour: 'numeric',
+      minute : 'numeric',
+      day : 'numeric',
+      month : 'long',
+      year : 'numeric',
+      // weekday: 'short'
+    }
+    // const local = navigator.language;
+    labelDate.textContent = new Intl.DateTimeFormat(
+        currentAccount.locale, options).format(now);
     inputLoginUsername.value = inputLoginPin.value = "";
     inputLoginPin.blur();
+    if (timer) clearInterval(timer);
+    timer = startLogoutTimer();
     updateUI(currentAccount);
   }
 });
@@ -330,6 +385,10 @@ btnTransfer.addEventListener("click", function (event) {
     receiverAccount.movementsDates.push(new Date().toISOString());
     // update Ui
     updateUI(currentAccount);
+
+    // Reset the Timer
+    clearInterval(timer);
+    timer = startLogoutTimer();
   }
 });
 
@@ -350,14 +409,17 @@ btnLoan.addEventListener("click", function (event) {
   if (
     amount > 0 &&
     currentAccount.movements.some((mov) => mov >= amount * 0.1)
-  ) {
+  )
+    setTimeout(function (){
     // add movement
     // TODO : fix the loan logic , when you request n,
     //  and have it you can request more and more, fix that
     currentAccount.movements.push(amount);
     currentAccount.movementsDates.push(new Date().toISOString());
     updateUI(currentAccount);
-  }
+      clearInterval(timer);
+      timer = startLogoutTimer();
+  },2500);
 });
 
 // close account
