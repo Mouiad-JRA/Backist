@@ -96,15 +96,18 @@ const tabsContent = document.querySelectorAll('.operations__content');
 // tabs.forEach(tab=> tab.addEventListener('click',()=>
 //
 // ))
-tabsContainer.addEventListener('click',function (event){
-    const clicked = event.target.closest('.operations__tab');
+tabsContainer.addEventListener('click', function (e) {
+    const clicked = e.target.closest('.operations__tab');
     // Guard clause
     if (!clicked) return;
-    tabs.forEach(t=>t.classList.remove('operations__tab--active'));
+    // Remove active classes
+    tabs.forEach(t => t.classList.remove('operations__tab--active'));
+    tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+    // Activate tab
     clicked.classList.add('operations__tab--active');
-    tabsContent.forEach(tb=>tb.classList.remove('operations__content--active'));
-document.querySelector(`.operations__content--${clicked.dataset.tab}`).
-classList.add('.operations__content--active');
+    // Activate content area
+    document.querySelector(`.operations__content--${clicked.dataset.tab}`).
+    classList.add('operations__content--active');
 });
 // Styles
 // To get the Style use getComputedStyle(element).property
