@@ -62,8 +62,30 @@ event.preventDefault();
     sectionOne.scrollIntoView({behavior:'smooth'});
 });
 
+// Page navigation
 
-
+// Not good way so use  Event Delegation
+/*
+document.querySelectorAll('.nav__link').forEach(el=>{
+    el.addEventListener('click', function (event){
+        event.preventDefault();
+        const id = this.getAttribute('href');  // this is the current element
+        document.querySelector(id).scrollIntoView({behavior:'smooth'});
+    });
+});
+**/
+// Event Delegation
+// 1. add event listener to common parent element
+// 2. Determine what element fire the event
+document.querySelector('.nav__links').addEventListener('click',
+    function (event){
+    event.preventDefault();
+    // Matching strategy
+       if (event.target.classList.contains('nav__link')){
+           const id = event.target.getAttribute('href');  // this is the current element
+           document.querySelector(id).scrollIntoView({behavior:'smooth'});
+       }
+    })
 // Styles
 // To get the Style use getComputedStyle(element).property
 // use style.setProperty(property, its value)
@@ -71,3 +93,7 @@ event.preventDefault();
 // Attributes (Work on standard prop only), use getAttribute(attrname), setAttribute
 // Data attr element.dataset.attrname
 
+//Event we can use proprty for them like onevent like onmouseenter, removeEventListener
+
+
+// Event Propagation and
