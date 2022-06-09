@@ -8,6 +8,9 @@ const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const header = document.querySelector('.header');
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const sectionOne = document.querySelector('#section--1');
+
 const openModal = function (event) {
     event.preventDefault();
     modal.classList.remove('hidden');
@@ -45,4 +48,26 @@ document.querySelector('.btn--close-cookie').addEventListener(
     'click',()=>message.remove() // equal to message.parentElement.removeChild
 );
 
-// To get the style Style use getComputedStyle(element).property
+btnScrollTo.addEventListener('click',(event)=>{
+event.preventDefault();
+// const s1coords = sectionOne.getBoundingClientRect(); //visible view port
+// // window.pageXOffset, window.pageYOffset
+// //     document.documentElement.clientHeight
+//     window.scrollTo({
+//         left: s1coords.left+window.pageXOffset,
+//         top: s1coords.top+window.pageYOffset,
+//         behavior: 'smooth',
+//     });
+    // OR use scrollIntoView
+    sectionOne.scrollIntoView({behavior:'smooth'});
+});
+
+
+
+// Styles
+// To get the Style use getComputedStyle(element).property
+// use style.setProperty(property, its value)
+
+// Attributes (Work on standard prop only), use getAttribute(attrname), setAttribute
+// Data attr element.dataset.attrname
+
