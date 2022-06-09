@@ -85,7 +85,27 @@ document.querySelector('.nav__links').addEventListener('click',
            const id = event.target.getAttribute('href');  // this is the current element
            document.querySelector(id).scrollIntoView({behavior:'smooth'});
        }
-    })
+    });
+// Tabbed Component
+
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+// Bad Way
+// tabs.forEach(tab=> tab.addEventListener('click',()=>
+//
+// ))
+tabsContainer.addEventListener('click',function (event){
+    const clicked = event.target.closest('.operations__tab');
+    // Guard clause
+    if (!clicked) return;
+    tabs.forEach(t=>t.classList.remove('operations__tab--active'));
+    clicked.classList.add('operations__tab--active');
+    tabsContent.forEach(tb=>tb.classList.remove('operations__content--active'));
+document.querySelector(`.operations__content--${clicked.dataset.tab}`).
+classList.add('.operations__content--active');
+});
 // Styles
 // To get the Style use getComputedStyle(element).property
 // use style.setProperty(property, its value)
@@ -96,4 +116,18 @@ document.querySelector('.nav__links').addEventListener('click',
 //Event we can use proprty for them like onevent like onmouseenter, removeEventListener
 
 
-// Event Propagation and
+// DOM Traversing
+/*
+childNodes
+children
+firstElementChild
+lastElementChild
+parentNode
+parentElement
+closest('.class')
+previousElementSibling
+nextElementSibling
+previousSibling
+nextSibling
+
+ */
