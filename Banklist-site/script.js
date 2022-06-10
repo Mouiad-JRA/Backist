@@ -10,7 +10,7 @@ const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const header = document.querySelector('.header');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const sectionOne = document.querySelector('#section--1');
-
+const nav = document.querySelector('.nav');
 const openModal = function (event) {
     event.preventDefault();
     modal.classList.remove('hidden');
@@ -109,7 +109,27 @@ tabsContainer.addEventListener('click', function (e) {
     document.querySelector(`.operations__content--${clicked.dataset.tab}`).
     classList.add('operations__content--active');
 });
-// Styles
+
+// Menu fade animation
+// have only one real arg event
+const handlerHover = function (event, opacity ){
+    if (event.target.classList.contains('nav__link')){
+        const clickedLink = event.target;
+        const siblings = clickedLink.closest('.nav').querySelectorAll('.nav__link');
+        const logo = clickedLink.closest('.nav').querySelector('img');
+        siblings.forEach(el=>{
+            if (el !== clickedLink) el.style.opacity = opacity; // or use this
+        })
+        logo.style.opacity = opacity;
+    }
+}
+nav.addEventListener('mouseover',function (event){
+    handlerHover(event,0.5);
+});
+// OR using Bind rerun new func where this (the currentTarget (what el we attach to)) is the first , then pass other partmter
+nav.addEventListener('mouseout',handlerHover.bind(1));
+
+//Styles
 // To get the Style use getComputedStyle(element).property
 // use style.setProperty(property, its value)
 
