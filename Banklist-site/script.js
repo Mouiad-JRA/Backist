@@ -129,6 +129,25 @@ nav.addEventListener('mouseover',function (event){
 // OR using Bind rerun new func where this (the currentTarget (what el we attach to)) is the first , then pass other partmter
 nav.addEventListener('mouseout',handlerHover.bind(1));
 
+// add sticky navigation // never use scroll for real
+
+// const initialCoords = sectionOne.getBoundingClientRect();
+//
+// window.addEventListener('scroll', function (){
+// if (window.scrollY > initialCoords.top) nav.classList.add('sticky')
+// else nav.classList.remove('sticky')
+// });
+
+const navHeight = nav.getBoundingClientRect().height;
+const stickyNav = function (entries){
+    const [entry] = entries;
+    if (!entry.isIntersecting) nav.classList.add('sticky');
+    else  nav.classList.remove('sticky');
+}
+const headerObserver = new IntersectionObserver(stickyNav,
+    { root: null, threshold:0, rootMargin: `-${navHeight}px`});
+
+headerObserver.observe(header);
 //Styles
 // To get the Style use getComputedStyle(element).property
 // use style.setProperty(property, its value)
