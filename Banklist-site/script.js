@@ -112,20 +112,19 @@ tabsContainer.addEventListener('click', function (e) {
 
 // Menu fade animation
 // have only one real arg event
-const handlerHover = function (event, opacity ){
+const handlerHover = function (event){
     if (event.target.classList.contains('nav__link')){
         const clickedLink = event.target;
         const siblings = clickedLink.closest('.nav').querySelectorAll('.nav__link');
         const logo = clickedLink.closest('.nav').querySelector('img');
         siblings.forEach(el=>{
-            if (el !== clickedLink) el.style.opacity = opacity; // or use this
+            if (el !== clickedLink) el.style.opacity = this; // or use this
         })
-        logo.style.opacity = opacity;
+        logo.style.opacity = this;
     }
 }
-nav.addEventListener('mouseover',function (event){
-    handlerHover(event,0.5);
-});
+// Passing an "argument" into handler
+nav.addEventListener('mouseover',handlerHover.bind(0.5));
 // OR using Bind rerun new func where this (the currentTarget (what el we attach to)) is the first , then pass other partmter
 nav.addEventListener('mouseout',handlerHover.bind(1));
 
