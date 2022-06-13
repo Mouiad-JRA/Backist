@@ -181,6 +181,33 @@ const imageObserver =  new IntersectionObserver(revealimages,
     { root: null, threshold:0 , rootMargin: '200px'});
 allImages.forEach( (image)=> imageObserver.observe(image));
 
+// add slider
+const slides = document.querySelectorAll('.slide');
+
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+
+
+let curSlide = 0;
+const maxSlid = slides.length;
+const goToSlid = function (s){
+    slides.forEach((slide, index)=>
+        slide.style.transform = `translateX(${100*(index-s)})`
+    );
+}
+goToSlid(0);
+const nextSlide = function (){
+    curSlide = 0 ? curSlide === maxSlid-1 : curSlide++;
+    goToSlid(curSlide)
+};
+
+const prevSlide = function (){
+    curSlide = maxSlid-1 ? curSlide === 0 : curSlide--;
+    goToSlid(curSlide)
+};
+btnRight.addEventListener('click',nextSlide );
+btnLeft.addEventListener('click',prevSlide );
+
 
 //Styles
 // To get the Style use getComputedStyle(element).property
